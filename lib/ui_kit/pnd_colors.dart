@@ -7,8 +7,8 @@ class PNDColors {
   static const Color black = Color(0xff000000);
   static const Color blue = Colors.blue;
   static const Color gray600 = Colors.white12;
-  static const Color gray700 = Colors.black12;
-  static const Color gray800 = Colors.black87;
+  static const Color gray700 = Color(0xff484848);
+  static const Color gray800 = Color(0xff212121);
   static const Color green = Colors.green;
   static const Color red = Colors.red;
 }

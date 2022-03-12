@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:riverpod_sample/ui_kit/button/pnd_button.dart';
 import 'package:riverpod_sample/ui_kit/text/pnd_text.dart';
+import 'package:riverpod_sample/ui_kit/theme/pnd_theme.dart';
 
 class PNDPopup extends StatelessWidget {
   final String title;
@@ -32,7 +33,11 @@ class PNDPopup extends StatelessWidget {
       );
 
   @override
-  Widget build(BuildContext context) => Dialog(
+  Widget build(BuildContext context) {
+    final theme = PNDTheme.of(context).pndThemeData.pndScaffoldTheme;
+
+    return Dialog(
+    backgroundColor: theme.popupColor,
         elevation: 10.0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.0),
@@ -63,6 +68,7 @@ class PNDPopup extends StatelessWidget {
           ),
         ),
       );
+  }
 }
 
 class PopupAction extends StatelessWidget {
