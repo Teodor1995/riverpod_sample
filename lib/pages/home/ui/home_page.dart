@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:riverpod_sample/components/scaffold/pnd_page_scaffold.dart';
+import 'package:riverpod_sample/global/navigation/app_routes.dart';
+import 'package:riverpod_sample/ui_kit/app_bar/pnd_app_bar.dart';
 import 'package:riverpod_sample/ui_kit/button/pnd_button.dart';
 import 'package:riverpod_sample/ui_kit/loading/pnd_loading_widget.dart';
 import 'package:riverpod_sample/ui_kit/text/pnd_text.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
 import '../../../di.dart';
 
 class HomePage extends HookConsumerWidget {
@@ -31,9 +32,29 @@ class HomePage extends HookConsumerWidget {
       const [],
     );
 
-    return const PNDScaffold(
-      body: _Body(),
-      actions: _Actions(),
+    return PNDScaffold(
+      appBar: PNDAppBar(
+        trail: Row(
+          children: [
+            IconButton(
+              onPressed: () =>
+                  ref.read(navigationManagerProvider).openSettings(),
+              icon: const Icon(Icons.settings),
+            ),
+            IconButton(
+              onPressed: () {
+                ref.read(navigationManagerProvider).openComplexRoute({
+                  AppRoutes.settingsPage: null,
+                  AppRoutes.appSettingsPage: null,
+                });
+              },
+              icon: const Icon(Icons.skip_next),
+            ),
+          ],
+        ),
+      ),
+      body: const _Body(),
+      actions: const _Actions(),
     );
   }
 }
@@ -60,7 +81,6 @@ class _Actions extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-
     // подписка на отдельное свойство вью модели
     final textKey = ref.watch(
       homePageStateProvider.select(
@@ -74,21 +94,13 @@ class _Actions extends ConsumerWidget {
       ),
     );
 
-    return Column(
-      children: [
-        PNDButton(
-          isLoading: isLoading,
-          title: textKey,
-          // колбеки нажатия вызываются через лямбду, а не по ссылке на метод, чтобы
-          // получать инстанс менеджера в момент нажатия а не при построении виджета
-          // доступ к менеджера из UI через read - без подписки
-          onTap: () => ref.read(homePageManagerProvider).switchLock(),
-        ),
-        PNDButton(
-          title: 'Switch Theme',
-          onTap: () => ref.read(appManagerProvider).switchTheme(),
-        ),
-      ],
+    return PNDButton(
+      isLoading: isLoading,
+      title: textKey,
+      // колбеки нажатия вызываются через лямбду, а не по ссылке на метод, чтобы
+      // получать инстанс менеджера в момент нажатия а не при построении виджета
+      // доступ к менеджера из UI через read - без подписки
+      onTap: () => ref.read(homePageManagerProvider).switchLock(),
     );
   }
 }

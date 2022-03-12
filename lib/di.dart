@@ -1,16 +1,46 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_sample/global/app_scope/app_manager.dart';
 import 'package:riverpod_sample/global/app_scope/app_model.dart';
 import 'package:riverpod_sample/global/app_scope/app_state.dart';
+import 'package:riverpod_sample/global/navigation/app_routes.dart';
+import 'package:riverpod_sample/global/navigation/navigation_manager.dart';
 import 'package:riverpod_sample/global/toast_manager.dart';
 import 'package:riverpod_sample/pages/home/logic/home_page_manager.dart';
 import 'package:riverpod_sample/pages/home/logic/home_page_state.dart';
-
 import 'pages/home/logic/home_page_view_model.dart';
+import 'utils/navigator/app_route_delegate.dart';
+import 'utils/navigator/app_router_information_parser.dart';
 
 /// globals
-final toastManager = Provider(
+final toastManagerProvider = Provider(
   (_) => const ToastManager(),
+);
+
+final navigationManagerProvider = Provider(
+  (ref) => NavigationManager(
+    ref.watch(appRouteDelegateProvider),
+  ),
+);
+
+final appRoutesProvider = Provider(
+  (_) => AppRoutes(),
+);
+
+final appRouteDelegateProvider = Provider(
+  (ref) => AppRouterDelegate(
+    initialRoute: AppRoutes.initialRoute,
+    navigatorKey: ref.watch(appRoutesProvider).navigatorKey,
+    onGeneratePage: ref.watch(appRoutesProvider).onGeneratePage,
+  ),
+);
+
+final appInformationParserProvider = Provider(
+  (_) => AppRouteInformationParser(),
+);
+
+final initialRouteSettingsProvider = Provider(
+  (_) => const RouteSettings(name: AppRoutes.homePage),
 );
 
 /// app scope
@@ -36,7 +66,7 @@ final homePageStateProvider =
 final homePageManagerProvider = Provider(
   (ref) => HomePageManager(
     ref.watch(homePageStateProvider.notifier),
-    ref.watch(toastManager),
+    ref.watch(toastManagerProvider),
   ),
 );
 

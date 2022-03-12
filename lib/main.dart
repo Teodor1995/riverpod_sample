@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_sample/di.dart';
-import 'package:riverpod_sample/pages/home/ui/home_page.dart';
+import 'di.dart';
 import 'ui_kit/theme/pnd_theme.dart';
 import 'ui_kit/theme/pnd_theme_data.dart';
 
@@ -18,10 +17,11 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     final isDarkTheme = ref.watch(appStateProvider).isDarkTheme;
 
-    return MaterialApp(
-      home: PNDTheme(
-        pndThemeData: isDarkTheme ? PNDThemeData.dark() : PNDThemeData.light(),
-        child: const HomePage(),
+    return PNDTheme(
+      pndThemeData: isDarkTheme ? PNDThemeData.dark() : PNDThemeData.light(),
+      child: MaterialApp.router(
+        routerDelegate: ref.watch(appRouteDelegateProvider),
+        routeInformationParser: ref.watch(appInformationParserProvider),
       ),
     );
   }
