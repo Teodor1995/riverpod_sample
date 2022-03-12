@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:riverpod_sample/utils/navigator/bundle.dart';
 
 typedef OnGeneratePageCallback = MaterialPage Function(String, Bundle?);
 
 class AppRouterDelegate extends _AppRouterDelegate {
+  final GlobalKey<NavigatorState> navigatorKey;
+
   AppRouterDelegate({
-    required GlobalKey<NavigatorState> navigatorKey,
+    required this.navigatorKey,
     required String initialRoute,
     required OnGeneratePageCallback onGeneratePage,
   }) : super(initialRoute: initialRoute, onGeneratePage: onGeneratePage);
 
   @override
   Widget build(BuildContext context) => Navigator(
+        key: navigatorKey,
         pages: List.of(_pages),
         onPopPage: _onPopPage,
       );
@@ -28,16 +30,9 @@ abstract class _AppRouterDelegate extends RouterDelegate<List<RouteSettings>>
     required this.onGeneratePage,
   });
 
-  final _pages = <MaterialPage>[];
-
-  @override
-  Future<void> setInitialRoutePath(_) async {
-    _pages.add(
-      onGeneratePage(initialRoute, null),
-    );
-
-    notifyListeners();
-  }
+  late final _pages = <MaterialPage>[
+    onGeneratePage(initialRoute, null),
+  ];
 
   void pushPage(String routeName, [Bundle? bundle]) {
     _pages.add(
@@ -70,5 +65,10 @@ abstract class _AppRouterDelegate extends RouterDelegate<List<RouteSettings>>
   @override
   Future<void> setNewRoutePath(configuration) async {
     //do nothing, maybe add here a route observer for metrics
+  }
+
+  @override
+  Future<void> setInitialRoutePath(_) async {
+    // do nothing
   }
 }

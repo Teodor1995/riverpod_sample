@@ -94,13 +94,23 @@ class _Actions extends ConsumerWidget {
       ),
     );
 
-    return PNDButton(
-      isLoading: isLoading,
-      title: textKey,
-      // колбеки нажатия вызываются через лямбду, а не по ссылке на метод, чтобы
-      // получать инстанс менеджера в момент нажатия а не при построении виджета
-      // доступ к менеджера из UI через read - без подписки
-      onTap: () => ref.read(homePageManagerProvider).switchLock(),
+    return Column(
+      children: [
+        PNDButton(
+          isLoading: isLoading,
+          title: textKey,
+          // колбеки нажатия вызываются через лямбду, а не по ссылке на метод, чтобы
+          // получать инстанс менеджера в момент нажатия а не при построении виджета
+          // доступ к менеджера из UI через read - без подписки
+          onTap: () => ref.read(homePageManagerProvider).switchLock(),
+        ),
+        PNDButton(
+          title: 'Show popup',
+          onTap: () => ref
+              .read(dialogManagerProvider)
+              .showInfoPopup(title: 'Any message'),
+        ),
+      ],
     );
   }
 }

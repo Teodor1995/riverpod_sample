@@ -8,6 +8,7 @@ import 'package:riverpod_sample/global/navigation/navigation_manager.dart';
 import 'package:riverpod_sample/global/toast_manager.dart';
 import 'package:riverpod_sample/pages/home/logic/home_page_manager.dart';
 import 'package:riverpod_sample/pages/home/logic/home_page_state.dart';
+import 'global/navigation/dialog_manager.dart';
 import 'pages/home/logic/home_page_view_model.dart';
 import 'utils/navigator/app_route_delegate.dart';
 import 'utils/navigator/app_router_information_parser.dart';
@@ -17,20 +18,15 @@ final toastManagerProvider = Provider(
   (_) => const ToastManager(),
 );
 
-final navigationManagerProvider = Provider(
-  (ref) => NavigationManager(
-    ref.watch(appRouteDelegateProvider),
-  ),
-);
-
+/// navigation
 final appRoutesProvider = Provider(
   (_) => AppRoutes(),
 );
 
 final appRouteDelegateProvider = Provider(
   (ref) => AppRouterDelegate(
-    initialRoute: AppRoutes.initialRoute,
     navigatorKey: ref.watch(appRoutesProvider).navigatorKey,
+    initialRoute: AppRoutes.initialRoute,
     onGeneratePage: ref.watch(appRoutesProvider).onGeneratePage,
   ),
 );
@@ -39,8 +35,17 @@ final appInformationParserProvider = Provider(
   (_) => AppRouteInformationParser(),
 );
 
-final initialRouteSettingsProvider = Provider(
-  (_) => const RouteSettings(name: AppRoutes.homePage),
+final navigationManagerProvider = Provider(
+  (ref) => NavigationManager(
+    ref.watch(appRouteDelegateProvider),
+  ),
+);
+
+/// dialogs
+final dialogManagerProvider = Provider(
+  (ref) => DialogManager(
+    ref.watch(appRoutesProvider).navigatorKey,
+  ),
 );
 
 /// app scope
